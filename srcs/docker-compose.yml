@@ -6,25 +6,10 @@ services:
     container_name: mariadb
     restart: on-failure
     env_file: .env
-    environment:
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: $MYSQL_DATABASE
-      MYSQL_USER: $MYSQL_USER
-      MYSQL_PASSWORD: $MYSQL_PASSWORD
+    ports:
+      - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
-    networks:
-      - inception_network
-
-  wordpress:
-    build: ./requirements/wordpress
-    container_name: wordpress
-    restart: on-failure
-    env_file: .env
-    depends_on:
-      - mariadb
-    volumes:
-      - wordpress_data:/var/www/html
     networks:
       - inception_network
 
@@ -41,11 +26,21 @@ services:
     networks:
       - inception_network
 
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    restart: on-failure
+    env_file: .env
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception_network
+
 networks:
   inception_network:
 
 volumes:
-  mariadb_data:
-    driver: local
-  wordpress_data:
-    driver: local
+  mariadb_data
+  wordpress_data

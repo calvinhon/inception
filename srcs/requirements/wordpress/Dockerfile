@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: chon <chon@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/02/20 16:53:35 by chon              #+#    #+#              #
-#    Updated: 2025/03/05 14:33:27 by chon             ###   ########.fr        #
+#    Created: 2025/03/05 14:00:00 by chon              #+#    #+#              #
+#    Updated: 2025/03/05 14:33:31 by chon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,10 +14,16 @@ FROM debian:oldstable
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y && rm -rf /var/lib/apt/lists/*
+# Install PHP extensions WordPress requires
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-COPY conf/nginx.conf /etc/nginx/nginx.conf
+# Download WordPress
+RUN curl -o wordpress.tar.gz -SL https://wordpress.org/latest.tar.gz \
+    && tar -xzf wordpress.tar.gz --strip-components=1 \
+    && rm wordpress.tar.gz
 
-EXPOSE 443
+# Expose web port
+EXPOSE 9000
 
-CMD ["nginx", "-g", "daemon off;"]
+# Use default Apache entrypoint
+CMD ["apache2-foreground"]
