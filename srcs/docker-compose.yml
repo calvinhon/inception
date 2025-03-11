@@ -42,5 +42,5 @@ networks:
   inception_network:
 
 volumes:
-  mariadb_data
-  wordpress_data
+  mariadb_data: {}
+  wordpress_data: {}
