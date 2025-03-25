@@ -6,35 +6,44 @@
 #    By: chon <chon@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/12 09:26:51 by chon              #+#    #+#              #
-#    Updated: 2025/02/21 10:34:12 by chon             ###   ########.fr        #
+#    Updated: 2025/03/25 20:09:47 by chon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# Variables
-DOCKER_COMPOSE = docker-compose -f srcs/docker-compose.yml
-SERVICE = inception  
+name = inception
+docker_compose = docker-compose -f srcs/docker-compose.yml --env-file srcs/.env
 
-# Build Docker images
+all:
+	@printf "Launch configuration ${name}...\n"
+	@bash srcs/requirements/wordpress/tools/make_dir.sh
+	@${docker_compose} up -d
+
 build:
-	$(DOCKER_COMPOSE) build
+	@printf "Build configuration ${name}...\n"
+	@bash srcs/requirements/wordpress/tolls/make_dir.sh
+	@${docker_compose} up -d --build
 
-# Start containers in detached mode
-up:
-	$(DOCKER_COMPOSE) up -d
-
-# Stop containers
 down:
-	$(DOCKER_COMPOSE) down
+	@printf "Stop configuration ${name}...\n"
+	@${docker_compose} down
 
-# Rebuild and restart
-rebuild: down build up
+re:     down
+	@printf "Rebuild configuration ${name}...\n"
+	@${docker_compose} up -d --build
 
-# View logs
-logs:
-	$(DOCKER_COMPOSE) logs -f $(SERVICE)
+clean: down
+	@printf "Cleaning configuration...\n"
+	@docker system prune -a
+	@sudo rm -rf ~/data/wordpress/*
+	@sudo rm -rf ~/data/mariadb/*
 
-# Remove all Docker resources
-clean:
-	$(DOCKER_COMPOSE) down --rmi all --volumes --remove-orphans
+fclean:
+	@printf "Full clean\n"
+	@CONTAINERS=$$(docker ps -q) || true
+	@docker system prune --all --force --volumes
+	@docker network prune --force
+	@docker volume prune --force
+	@sudo rm -rf ~/data/wordpress/*
+	@sudo rm -rf ~/data/mariadb/*
 
-.PHONY: build up down rebuild logs clean
+.PHONY  : all build down re clean fclean
