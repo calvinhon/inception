@@ -37,12 +37,10 @@ clean: down
 	@sudo rm -rf ~/data/wordpress/*
 	@sudo rm -rf ~/data/mariadb/*
 
-fclean:
+fclean: clean
 	@printf "Full clean\n"
 	@CONTAINERS=$$(docker ps -q) || true
 	@docker system prune --all --force --volumes
-	@docker network prune --force
-	@docker volume prune --force
 	@sudo rm -rf ~/data/wordpress/*
 	@sudo rm -rf ~/data/mariadb/*
 
