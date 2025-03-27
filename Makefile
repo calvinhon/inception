@@ -6,7 +6,7 @@
 #    By: chon <chon@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/12 09:26:51 by chon              #+#    #+#              #
-#    Updated: 2025/03/25 20:09:47 by chon             ###   ########.fr        #
+#    Updated: 2025/03/27 19:34:44 by chon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ all:
 
 build:
 	@printf "Build configuration ${name}...\n"
-	@bash srcs/requirements/wordpress/tolls/make_dir.sh
+	@bash srcs/requirements/wordpress/tools/make_dir.sh
 	@${docker_compose} up -d --build
 
 down:
