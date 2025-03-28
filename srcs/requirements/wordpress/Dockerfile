@@ -1,24 +1,8 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Dockerfile                                         :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: chon <chon@student.42.fr>                  +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/03/05 14:00:00 by chon              #+#    #+#              #
-#    Updated: 2025/03/25 19:13:07 by chon             ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-FROM alpine:3.19
-ARG WORDPRESS_DB_NAME
-ARG WORDPRESS_DB_USER
-ARG WORDPRESS_DB_PASSWORD
-ENV PHP_VERSION=82 \
-    WORDPRESS_DB_HOST=mariadb \
-    WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME} \
-    WORDPRESS_DB_USER=${WORDPRESS_DB_USER} \
-    WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+FROM alpine:3.20
+ARG PHP_VERSION=82 \
+    DB_NAME \
+    DB_USER \
+    DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -47,7 +31,7 @@ RUN wget https://wordpress.org/latest.zip && \
     unzip latest.zip && \
     cp -rf wordpress/* . && \
     rm -rf wordpress latest.zip
-COPY ./requirements/wordpress/conf/wp-config-create.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["php-fpm82", "-F"]
+COPY ./requirements/wordpress/conf/wp-config-create.sh .
+RUN sh wp-config-create.sh && rm wp-config-create.sh && \
+    chmod -R 0777 wp-content/
+CMD ["/usr/sbin/php-fpm82", "-F"]

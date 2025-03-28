@@ -9,7 +9,10 @@ services:
     depends_on:
       - wordpress
     ports:
+      - "80:80"
       - "443:443"
+    networks:
+      - inception
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
@@ -20,14 +23,16 @@ services:
     build:
       context: .
       dockerfile: requirements/mariadb/Dockerfile
-    environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT}
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_ROOT: ${DB_ROOT}
     container_name: mariadb
     ports:
       - "3306:3306"
+    networks:
+      - inception
     volumes:
       - db-volume:/var/lib/mysql
     restart: always
@@ -37,18 +42,15 @@ services:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
       args:
-        - WORDPRESS_DB_NAME=${DB_NAME}
-        - WORDPRESS_DB_USER=${DB_USER}
-        - WORDPRESS_DB_PASSWORD=${DB_PASS}
-    environment:
-      WORDPRESS_DB_HOST: mariadb
-      WORDPRESS_DB_NAME: ${DB_NAME}
-      WORDPRESS_DB_USER: ${DB_USER}
-      WORDPRESS_DB_PASSWORD: ${DB_PASS}
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
     container_name: wordpress
     depends_on:
       - mariadb
     restart: always
+    networks:
+      - inception
     volumes:
       - wp-volume:/var/www/
 

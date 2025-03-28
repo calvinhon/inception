@@ -27,7 +27,7 @@ down:
 	@printf "Stop configuration ${name}...\n"
 	@${docker_compose} down
 
-re:     down
+re:	fclean
 	@printf "Rebuild configuration ${name}...\n"
 	@${docker_compose} up -d --build
 
@@ -39,9 +39,6 @@ clean: down
 
 fclean: clean
 	@printf "Full clean\n"
-	@CONTAINERS=$$(docker ps -q) || true
-	@docker system prune --all --force --volumes
-	@sudo rm -rf ~/data/wordpress/*
-	@sudo rm -rf ~/data/mariadb/*
+	-docker volume ls -q | xargs -r docker volume rm
 
 .PHONY  : all build down re clean fclean

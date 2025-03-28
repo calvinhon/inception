@@ -1,16 +1,4 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Dockerfile                                         :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: chon <chon@student.42.fr>                  +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/02/20 16:53:35 by chon              #+#    #+#              #
-#    Updated: 2025/03/25 17:41:10 by chon             ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-FROM alpine:3.19
-RUN     apk update && apk upgrade && apk add --no-cache nginx
+FROM alpine:3.20
+RUN	apk update && apk upgrade && apk add --no-cache nginx
 EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
