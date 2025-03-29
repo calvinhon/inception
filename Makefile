@@ -34,11 +34,12 @@ re:	fclean
 clean: down
 	@printf "Cleaning configuration...\n"
 	@docker system prune -a
-	@sudo rm -rf ~/data/wordpress/*
-	@sudo rm -rf ~/data/mariadb/*
 
 fclean: clean
 	@printf "Full clean\n"
-	-docker volume ls -q | xargs -r docker volume rm
+	@docker volume ls -q | xargs -r docker volume rm
+	@sudo rm -rf ~/data/wordpress/*
+	@sudo rm -rf ~/data/mariadb/*
+	@sudo rm -rf ~/data/portainer/*
 
 .PHONY  : all build down re clean fclean
