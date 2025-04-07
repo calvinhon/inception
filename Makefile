@@ -15,21 +15,27 @@ docker_compose = docker-compose -f srcs/docker-compose.yml --env-file srcs/.env
 
 all:
 	@printf "Launch configuration ${name}...\n"
-	@bash srcs/requirements/wordpress/tools/make_dir.sh
+	@bash srcs/requirements/tools/make_dir.sh
+	@${docker_compose} up -d nginx wordpress mariadb
+
+bonus:
+	@printf "Launch bonus configuration ${name}...\n"
+	@bash srcs/requirements/tools/make_dir.sh
 	@${docker_compose} up -d
 
 build:
 	@printf "Build configuration ${name}...\n"
-	@bash srcs/requirements/wordpress/tools/make_dir.sh
+	@bash srcs/requirements/tools/make_dir.sh
+	@${docker_compose} up -d --build nginx wordpress mariadb
+
+bbuild:
+	@printf "Build bonus configuration ${name}...\n"
+	@bash srcs/requirements/tools/make_dir.sh
 	@${docker_compose} up -d --build
 
 down:
 	@printf "Stop configuration ${name}...\n"
 	@${docker_compose} down
-
-re:	fclean
-	@printf "Rebuild configuration ${name}...\n"
-	@${docker_compose} up -d --build
 
 clean: down
 	@printf "Cleaning configuration...\n"
@@ -42,4 +48,7 @@ fclean: clean
 	@sudo rm -rf ~/data/mariadb/*
 	@sudo rm -rf ~/data/portainer/*
 
-.PHONY  : all build down re clean fclean
+re:	fclean all
+	@printf "Rebuild configuration ${name} completed\n"
+
+.PHONY: all bonus build bbonus down clean fclean re
