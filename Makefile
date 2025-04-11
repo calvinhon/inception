@@ -44,9 +44,7 @@ clean: down
 fclean: clean
 	@printf "Full clean\n"
 	@docker volume ls -q | xargs -r docker volume rm
-	@sudo rm -rf ~/data/wordpress/*
-	@sudo rm -rf ~/data/mariadb/*
-	@sudo rm -rf ~/data/portainer/*
+	@sudo rm -rf ~/data
 
 re:	fclean all
 	@printf "Rebuild configuration ${name} completed\n"

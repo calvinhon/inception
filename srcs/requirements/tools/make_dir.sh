@@ -1,18 +1,18 @@
 #!/bin/bash
 
-if [ ! -d "/~/chon/data" ]; then
+if [ ! -d "~/data" ]; then
         mkdir -p ~/data
 fi
 
-if [ ! -d "/~/data/mariadb" ]; then
+if [ ! -d "~/data/mariadb" ]; then
         mkdir -p ~/data/mariadb
 fi
 
-if [ ! -d "/~/data/wordpress" ]; then
+if [ ! -d "~/data/wordpress" ]; then
         mkdir -p ~/data/wordpress
 fi
 
-if [ ! -d "/~/data/portainer" ]; then
+if [ ! -d "~/data/portainer" ]; then
         mkdir -p ~/data/portainer
 fi
 
